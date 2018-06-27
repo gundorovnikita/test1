@@ -1,0 +1,43 @@
+{% extends   'exterior.html' %}
+{% load staticfiles %}
+
+{% block title%} Car Index {% endblock %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock %}
+    {% block login %}
+        {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'accounts:profile' username=user.username %}" style="color: white; ">Welcome, {{ user.first_name }}</a>
+        {% else %}
+            <a class="nav-item nav-link" href="{% url 'accounts:login' %}" style="color: white; ">Login</a>
+        {% endif %}
+    {% endblock %}
+
+    {% block logout %}
+        {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'accounts:logout' %}" style="color: white; ">Logout</a>
+        {% else %}
+
+            <a class="nav-item nav-link" href="{% url 'accounts:register' %}" style="color:white;">Register</a>
+        {% endif %}
+    {% endblock %}
+{% block content %}
+
+  <!-- Car Cards -->
+  <ul id="menu">
+      {% for car in carList %}
+          <li>
+              <div class="card" style="width: 18rem;">
+                  <img class="card-img-top" src="{{car.CarImg.url}}" alt="{{car.Model}}">
+                  <div class="card-body">
+                      <h5 class="card-title">{{car}}</h5>
+                      <p class="card-text">{{car.Transmission}} </p>
+                      {% block details %}
+                          <a href="{% url 'cars:detail' car.id %}" class="btn btn-primary">Details</a>
+                      {% endblock %}
+                  </div>
+              </div>
+          </li>
+      {% endfor %}
+  </ul>
+{% endblock %}

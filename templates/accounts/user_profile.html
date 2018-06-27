@@ -1,0 +1,103 @@
+{% extends   'exterior.html' %}
+{% load staticfiles %}
+{% block title %}{{ user }}{% endblock %}
+{% block login %}
+        {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'accounts:profile' username=user.username %}" style="color: white; ">Welcome, {{ user.first_name }}</a>
+        {% else %}
+            <a class="nav-item nav-link" href="{% url 'accounts:login' %}" style="color: white; ">Login</a>
+        {% endif %}
+    {% endblock %}
+
+    {% block logout %}
+        {% if user.is_authenticated %}
+            <a class="nav-item nav-link" href="{% url 'accounts:logout' %}" style="color: white; ">Logout</a>
+        {% else %}
+
+            <a class="nav-item nav-link" href="{% url 'accounts:register' %}" style="color:white;">Register</a>
+        {% endif %}
+    {% endblock %}
+{% block content %}
+
+
+    <!-- Jumbotron-->
+    <div class="jumbotron jumbotron-fluid">
+  <div class="container">
+
+    <h1 class="display-4">
+        {% if hasPhoto %}
+            <img src="{{ photo.url }}" style="width: 300px; height: 300px;">
+        {% else %}
+        <img src="{% static 'img/default-img.png' %}" style="width: 300px;" alt="{{user.username}}">
+        {% endif %}
+        Welcome, {{ user.first_name }}!
+    </h1>
+       <a href="{% url 'accounts:addphoto' user.username %}" class="badge badge-secondary">Edit Picture</a>
+  </div>
+    <hr class="my-4">
+        <p class="lead">
+            <!-- Table -->
+        <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Account Details</th>
+            <th scope="col">Value</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">First Name</th>
+      <td>{{user.first_name}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Last Name</th>
+      <td>{{user.last_name}}</td>
+    </tr>
+    <tr>
+      <th scope="row">Email</th>
+      <td>{{user.email}}</td>
+    </tr>
+  <tr>
+      <th scope="row">Username</th>
+      <td>{{user.username}}</td>
+    </tr>
+  <tr>
+      <th scope="row">Test Drives Booked</th>
+  <td>
+
+  {% if upcoming %}
+       <ul>
+      {% for drive in upcoming %}
+          <li>{{ drive.driveCar }} reserved on {{drive.driveDate}} <a class="badge badge-danger" href="{% url 'testdrive:delete' drive.pk %}">Cancel</a></li>
+
+      {% endfor %}
+      </ul>
+      {% else %}
+      No upcoming testdrives
+  {% endif %}
+
+  </td>
+    </tr>
+   <tr>
+      <th scope="row">Cars Bought</th>
+  <td>
+
+  {% if boughtCars %}
+       <ul>
+      {% for car in boughtCars %}
+          <li> {{ car.boughtCar }}</li>
+
+      {% endfor %}
+      </ul>
+      {% else %}
+      No bought cars
+  {% endif %}
+
+  </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+{% endblock %}
